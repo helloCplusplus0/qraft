@@ -28,7 +28,7 @@ mypy: ## Run mypy type checks
 	mypy qraft
 
 test: ## Run tests with coverage
-	pytest --cov=qraft --cov-report=term-missing
+	pytest --cov=qraft --cov-report=term-missing --cov-fail-under=80
 
 dev: ## Start Docker dev environment
 	./scripts/dev-env.sh

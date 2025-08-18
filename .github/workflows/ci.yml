@@ -35,4 +35,4 @@ jobs:
           pip-audit --strict
       - name: Test
         run: |
-          pytest --cov=qraft --cov-report=term-missing
+          pytest --cov=qraft --cov-report=term-missing --cov-fail-under=80
