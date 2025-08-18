@@ -1,0 +1,11 @@
+version: "3.8"
+services:
+  qraft-dev:
+    build:
+      context: .
+      dockerfile: docker/Dockerfile.dev
+    volumes:
+      - ./:/app
+    tty: true
+    command: ["bash"]
+
