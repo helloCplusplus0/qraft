@@ -1,7 +1,8 @@
 FROM python:3.11-slim
 WORKDIR /app
 COPY requirements/ /app/requirements/
-RUN pip install --upgrade pip &&     pip install -r requirements/requirements-stable.txt -c requirements/constraints/3.11.txt
+RUN pip install --upgrade pip && \
+    pip install -r requirements/requirements-stable.txt -c requirements/constraints/3.11.txt
 COPY qraft /app/qraft
-CMD ["python", "-c", "import qraft; print("Qraft initialized")"]
+CMD ["python", "-c", "import qraft; print('Qraft initialized')"]
 
