@@ -14,13 +14,16 @@ dependencies = []
 [tool.black]
 line-length = 100
 target-version = ["py310", "py311"]
+extend-exclude = "/(\.venv|dist|build|artifacts)/"
 
 [tool.isort]
 profile = "black"
+skip = [".venv", "dist", "build", "artifacts"]
 
 [tool.flake8]
 max-line-length = 100
 extend-ignore = ["E203", "W503"]
+exclude = [".venv", "dist", "build", "artifacts", "__pycache__"]
 
 [tool.pytest.ini_options]
 addopts = "-q --strict-markers --disable-warnings --maxfail=1"
