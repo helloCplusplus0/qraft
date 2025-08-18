@@ -13,7 +13,7 @@ setup: ## Setup dev environment
 lint: ## Run lint checks
 	black .
 	isort .
-	flake8 .
+	flake8 . --exclude .venv,dist,build,artifacts,__pycache__,.pytest_cache
 
 mypy: ## Run mypy type checks
 	mypy qraft

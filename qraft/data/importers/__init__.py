@@ -1,1 +1,1 @@
-"""Importers package."""\n
+"""Importers package."""
