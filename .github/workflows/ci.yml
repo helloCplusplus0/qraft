@@ -29,6 +29,10 @@ jobs:
       - name: Type check
         run: |
           mypy qraft
+      - name: Dependency audit
+        run: |
+          python -m pip install pip-audit
+          pip-audit --strict
       - name: Test
         run: |
           pytest --cov=qraft --cov-report=term-missing
