@@ -1,0 +1,15 @@
+# API配置
+api:
+  host: 0.0.0.0
+  port: 8000
+  debug: true
+  cors:
+    allow_origins: ["*"]
+    allow_methods: ["*"]
+    allow_headers: ["*"]
+  auth:
+    enabled: false
+    # 在生产环境中启用认证
+    # enabled: true
+    # secret_key: "your-secret-key"
+    # token_expire_minutes: 60

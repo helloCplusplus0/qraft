@@ -1,0 +1,29 @@
+# 预处理配置
+preprocessing:
+  default:
+    - name: validate_schema
+      config:
+        strict: true
+    - name: add_timestamp
+      config:
+        field: processing_time
+    - name: drop_malformed
+      config: {}
+  
+  pipelines:
+    - source: binance_trades
+      operators:
+        - name: normalize_price
+          config:
+            fields: ["price"]
+            method: "min_max"
+        - name: aggregate
+          config:
+            window: "1m"
+            method: "ohlcv"
+    
+    - source: yahoo_finance
+      operators:
+        - name: extract_features
+          config:
+            features: ["sma_5", "sma_20", "rsi_14"]

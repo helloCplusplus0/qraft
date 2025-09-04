@@ -1,0 +1,26 @@
+# 检测器配置
+detectors:
+  - name: price_drift
+    type: adwin
+    source: binance_trades
+    config:
+      delta: 0.002
+      fields: ["price"]
+      grace_period: 100
+  
+  - name: volume_anomaly
+    type: half_space_trees
+    source: binance_trades
+    config:
+      n_trees: 10
+      height: 8
+      window_size: 100
+      fields: ["volume"]
+  
+  - name: market_regime
+    type: cluster_detector
+    source: yahoo_finance
+    config:
+      n_clusters: 4
+      features: ["sma_5", "sma_20", "rsi_14"]
+      window_size: 50

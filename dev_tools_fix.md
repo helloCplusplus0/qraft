@@ -110,6 +110,8 @@
 | MeloTTS | 端到端语音合成 | Python | [https://github.com/myshell-ai/MeloTTS](https://github.com/myshell-ai/MeloTTS) |
 | FunClip | 自动视频剪辑工具 | Python | [https://github.com/modelscope/FunClip](https://github.com/modelscope/FunClip) |
 | River | 在线机器学习的 Python 库,流数据友好 | Python | [River](https://github.com/online-ml/river) |
+| MOA | 大数据流挖掘的开源框架 | Java | [MOA](https://github.com/Waikato/moa?tab=readme-ov-file) |
+| CapyMOA | python生态MOA | Python | [CapyMOA](https://github.com/adaptive-machine-learning/CapyMOA) |
 
 ### 向量/搜索
 
@@ -352,6 +354,7 @@
 | miru-app | 个人财务管理 | TypeScript | [https://github.com/miru-project/miru-app](https://github.com/miru-project/miru-app) |
 | awesome-quant | quant资源库 | TypeScript | [awesome-quant](https://github.com/wilsonfreitas/awesome-quant?tab=readme-ov-file) |
 | vectorbt | 回测引擎,简洁快速测试更多的模型，找到最佳模型 | Python | [vectorbt](https://github.com/polakowo/vectorbt?utm_source=chatgpt.com) |
+| Kronos | 金融市场语言的基础模型，K线识别 | Python | [Kronos](https://github.com/shiyu-coder/Kronos) |
 
 ### 媒体、照片、视频与游戏
 
@@ -450,7 +453,7 @@
 | AutoGluon |  3 行代码中快速准确地进行机器学习 | Jupyter | [AutoGluon](https://github.com/autogluon/autogluon) |
 | ClearML |  MLOps/LLMOps 解决方案 | Python | [ClearML](https://github.com/clearml/clearml) |
 | MLflow |  MLOps/LLMOps 解决方案 | Python | [MLflow](https://github.com/mlflow/mlflow) |
-
+| PandaVPNPro |  vpn 机场 代理 | Python | [PandaVPNPro](https://github.com/DiningFactory/panda-vpn-pro) |
 
 
 ### RPA、自动化与测试

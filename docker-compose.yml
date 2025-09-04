@@ -1,11 +1,57 @@
-version: "3.8"
+version: '3'
+
 services:
-  qraft-dev:
+  nats:
+    image: nats:2.10-alpine
+    ports:
+      - "4222:4222"
+      - "8222:8222"
+    volumes:
+      - ./data/nats:/data
+    command: ["-js", "-m", "8222"]
+
+  clickhouse:
+    image: clickhouse/clickhouse-server:23.8
+    ports:
+      - "8123:8123"
+      - "9000:9000"
+    volumes:
+      - ./data/clickhouse:/var/lib/clickhouse
+      - ./configs/clickhouse:/etc/clickhouse-server/conf.d
+    ulimits:
+      nofile:
+        soft: 262144
+        hard: 262144
+
+  prometheus:
+    image: prom/prometheus:latest
+    ports:
+      - "9090:9090"
+    volumes:
+      - ./configs/prometheus:/etc/prometheus
+      - ./data/prometheus:/prometheus
+    command:
+      - '--config.file=/etc/prometheus/prometheus.yml'
+
+  grafana:
+    image: grafana/grafana:latest
+    ports:
+      - "3000:3000"
+    volumes:
+      - ./data/grafana:/var/lib/grafana
+    depends_on:
+      - prometheus
+      - clickhouse
+
+  qraft:
     build:
       context: .
-      dockerfile: docker/Dockerfile.dev
+      dockerfile: Dockerfile
     volumes:
-      - ./:/app
-    tty: true
-    command: ["bash"]
-
+      - .:/app
+    depends_on:
+      - nats
+      - clickhouse
+    ports:
+      - "8000:8000"
+    command: ["uvicorn", "qraft.api.main:app", "--host", "0.0.0.0", "--reload"]

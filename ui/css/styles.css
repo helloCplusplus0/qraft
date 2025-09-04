@@ -1,0 +1,142 @@
+/* Qraft7.0 样式表 */
+
+/* 全局样式 */
+body {
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+    background-color: #f8f9fa;
+    color: #212529;
+}
+
+/* 卡片样式 */
+.card {
+    border-radius: 0.5rem;
+    box-shadow: 0 0.125rem 0.25rem rgba(0, 0, 0, 0.075);
+    border: none;
+}
+
+.card-header {
+    background-color: #fff;
+    border-bottom: 1px solid rgba(0, 0, 0, 0.125);
+    padding: 1rem;
+}
+
+/* 表格样式 */
+.table th {
+    font-weight: 600;
+    border-top: none;
+}
+
+.table td {
+    vertical-align: middle;
+}
+
+/* 状态指示器 */
+.status-indicator {
+    display: inline-block;
+    width: 0.75rem;
+    height: 0.75rem;
+    border-radius: 50%;
+    margin-right: 0.5rem;
+}
+
+.status-healthy {
+    background-color: #28a745;
+}
+
+.status-unhealthy {
+    background-color: #dc3545;
+}
+
+.status-unknown {
+    background-color: #ffc107;
+}
+
+/* 置信度指示器 */
+.confidence-indicator {
+    height: 0.5rem;
+    border-radius: 0.25rem;
+    background-color: #e9ecef;
+}
+
+.confidence-bar {
+    height: 100%;
+    border-radius: 0.25rem;
+    background-color: #007bff;
+}
+
+/* 模式详情 */
+.pattern-detail-section {
+    margin-bottom: 1.5rem;
+}
+
+.pattern-detail-section h6 {
+    font-weight: 600;
+    margin-bottom: 0.75rem;
+    color: #495057;
+}
+
+.pattern-detail-item {
+    display: flex;
+    margin-bottom: 0.5rem;
+}
+
+.pattern-detail-label {
+    font-weight: 500;
+    width: 8rem;
+    color: #6c757d;
+}
+
+.pattern-detail-value {
+    flex: 1;
+}
+
+.contributor-item {
+    display: flex;
+    align-items: center;
+    margin-bottom: 0.5rem;
+}
+
+.contributor-score {
+    width: 3rem;
+    text-align: right;
+    font-weight: 500;
+}
+
+.contributor-bar {
+    flex: 1;
+    height: 0.5rem;
+    margin: 0 0.5rem;
+    background-color: #e9ecef;
+    border-radius: 0.25rem;
+}
+
+.contributor-bar-fill {
+    height: 100%;
+    border-radius: 0.25rem;
+    background-color: #007bff;
+}
+
+.contributor-field {
+    width: 8rem;
+}
+
+/* 响应式调整 */
+@media (max-width: 768px) {
+    .card-header {
+        flex-direction: column;
+        align-items: flex-start !important;
+    }
+    
+    .card-header > div {
+        margin-top: 0.5rem;
+    }
+    
+    .pattern-detail-item {
+        flex-direction: column;
+    }
+    
+    .pattern-detail-label {
+        width: 100%;
+        margin-bottom: 0.25rem;
+    }
+}

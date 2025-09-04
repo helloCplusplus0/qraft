@@ -1,0 +1,30 @@
+# 适配器配置
+adapters:
+  - name: binance_trades
+    type: websocket
+    config:
+      url: wss://stream.binance.com:9443/ws/btcusdt@trade
+      reconnect_interval: 5
+      parser: binance_trade_parser
+      batch_size: 100
+      batch_interval_ms: 500
+  
+  - name: yahoo_finance
+    type: rest
+    config:
+      url: https://query1.finance.yahoo.com/v8/finance/chart/AAPL
+      interval_sec: 60
+      params:
+        range: 1d
+        interval: 1m
+      parser: yahoo_finance_parser
+  
+  - name: local_csv
+    type: file
+    config:
+      path: /data/trades/*.csv
+      watch: true
+      parser: csv_parser
+      options:
+        delimiter: ","
+        header: true
