@@ -1,20 +1,38 @@
 version: '3'
 
+networks:
+  frontend:
+    driver: bridge
+  backend:
+    driver: bridge
+
 services:
   nats:
-    image: nats:2.10-alpine
+    image: docker.io/library/nats:2.10-alpine
+    container_name: qraft-nats
+    networks:
+      - backend
     ports:
-      - "4222:4222"
-      - "8222:8222"
+      - "4222:4222"  # Client connections
+      - "8222:8222"  # HTTP monitoring
     volumes:
       - ./data/nats:/data
     command: ["-js", "-m", "8222"]
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8222/healthz"]
+      interval: 10s
+      timeout: 5s
+      retries: 3
 
   clickhouse:
-    image: clickhouse/clickhouse-server:23.8
+    image: docker.io/clickhouse/clickhouse-server:23.8
+    container_name: qraft-clickhouse
+    networks:
+      - backend
     ports:
-      - "8123:8123"
-      - "9000:9000"
+      - "8123:8123"  # HTTP interface
+      - "9000:9000"  # Native interface
     volumes:
       - ./data/clickhouse:/var/lib/clickhouse
       - ./configs/clickhouse:/etc/clickhouse-server/conf.d
@@ -22,36 +40,86 @@ services:
       nofile:
         soft: 262144
         hard: 262144
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "wget", "--no-verbose", "--spider", "--tries=1", "http://localhost:8123/ping"]
+      interval: 10s
+      timeout: 5s
+      retries: 3
 
   prometheus:
-    image: prom/prometheus:latest
+    image: docker.io/prom/prometheus:latest
+    container_name: qraft-prometheus
+    networks:
+      - backend
     ports:
-      - "9090:9090"
+      - "9091:9090"  # 修改为9091:9090，避免与系统服务冲突
     volumes:
       - ./configs/prometheus:/etc/prometheus
       - ./data/prometheus:/prometheus
     command:
       - '--config.file=/etc/prometheus/prometheus.yml'
+      - '--storage.tsdb.path=/prometheus'
+      - '--web.console.libraries=/etc/prometheus/console_libraries'
+      - '--web.console.templates=/etc/prometheus/consoles'
+      - '--web.enable-lifecycle'
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "wget", "--no-verbose", "--spider", "--tries=1", "http://localhost:9090/-/healthy"]
+      interval: 10s
+      timeout: 5s
+      retries: 3
 
   grafana:
-    image: grafana/grafana:latest
+    image: docker.io/grafana/grafana:latest
+    container_name: qraft-grafana
+    networks:
+      - frontend
+      - backend
     ports:
-      - "3000:3000"
+      - "3001:3000"  # 修改为3001:3000，避免与test-backend容器冲突
     volumes:
       - ./data/grafana:/var/lib/grafana
+    environment:
+      - GF_SECURITY_ADMIN_USER=admin
+      - GF_SECURITY_ADMIN_PASSWORD=admin
+      - GF_USERS_ALLOW_SIGN_UP=false
     depends_on:
       - prometheus
       - clickhouse
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "wget", "--no-verbose", "--spider", "--tries=1", "http://localhost:3000/api/health"]
+      interval: 10s
+      timeout: 5s
+      retries: 3
 
   qraft:
-    build:
-      context: .
-      dockerfile: Dockerfile
+    image: ghcr.io/hellocplusplus0/qraft/qraft-app:latest
+    container_name: qraft-app
+    networks:
+      - frontend
+      - backend
     volumes:
       - .:/app
+      - ./logs:/app/logs
     depends_on:
       - nats
       - clickhouse
     ports:
-      - "8000:8000"
-    command: ["uvicorn", "qraft.api.main:app", "--host", "0.0.0.0", "--reload"]
+      - "8000:8000"  # FastAPI
+    environment:
+      - PYTHONPATH=/app
+      - QRAFT_CONFIG_DIR=/app/configs
+      - QRAFT_ENV=development
+      - NATS_URL=nats://nats:4222
+      - CLICKHOUSE_HOST=clickhouse
+      - CLICKHOUSE_PORT=9000
+      - PROMETHEUS_URL=http://prometheus:9090  # 容器内部访问仍然使用9090端口
+    command: ["uvicorn", "qraft.api.main:app", "--host", "0.0.0.0", "--port", "8000", "--reload"]
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8000/health"]
+      interval: 10s
+      timeout: 5s
+      retries: 3
